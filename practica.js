@@ -37,11 +37,11 @@ function drawMap(featureCollection) {
 
     //2.Proyeccion de coordenadas [long,lat] en valores X,Y
     var projection = d3.geoMercator()
-        .fitSize([width, height], featureCollection) // equivalente a  .fitExtent([[0, 0], [width, height]], featureCollection)
+        .fitSize([width -50, height -100], featureCollection) // equivalente a  .fitExtent([[0, 0], [width, height]], featureCollection)
         //.scale(1000)
         //Si quiero centrar el mapa en otro centro que no sea el devuelto por fitSize.
         .center(center) //centrar el mapa en una long,lat determinada
-        .translate([width / 2, height / 2]) //centrar el mapa en una posicion x,y determinada
+        .translate([width / 2, height / 2 + 60]) //centrar el mapa en una posicion x,y determinada
 
     //console.log(projection([long,lat]))
 
@@ -56,7 +56,7 @@ function drawMap(featureCollection) {
 
    var scaleColor = d3.scaleQuantize()
         .domain([min_price,max_price])
-        .range(["#BDBDFF","#B5E7D3","steelblue","blue","FF9900", "FF9901", "red"]);
+        .range(["#82a1b1","#82b1aa","#83b093","#89b083","#9fb083", "#afaa84", "#af9584"]);
         console.log(scaleColor.thresholds())
 
    var createdPath = svg.selectAll('path')
@@ -205,14 +205,17 @@ function drawMap(featureCollection) {
          .attr("x", (d, i) => scaleLegend(i)) // o (i * (widthRect + 2)) //No haria falta scaleLegend
          .attr("fill", (d) => d);
  
+    text_legend = [0, scaleColor.thresholds()]
+
+    var f = d3.format(".1f");
      var text_legend = svg.append("g")
          .selectAll("text")
-         .data(d3.scaleColor)
+         .data(scaleColor.thresholds())
          .enter()
          .append("text")
-         .attr("x", (d, i) => scaleLegend(i)) // o (i * (widthRect + 2))
+         .attr("x", (d, i) => scaleLegend(i) + 65) // o (i * (widthRect + 2))
          .attr("y", heightRect * 2.5)
-         .text((d) => d.properties.name)
+         .text((d) => +f(d))
          .attr("font-size", 12)        
    
         
